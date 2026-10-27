@@ -20,11 +20,18 @@ public class AdminDashboard extends JFrame {
     private JLabel airlinesCount;
     private JLabel seatsCount;
 
+    // Track single instance of FlightManagement window
+    private FlightManagement flightManagementFrame = null;
+
     public AdminDashboard() {
         setTitle("SkySeat - Admin Dashboard");
         setSize(1250, 750);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Enforce Full-Screen Maximized State
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
         setLayout(new BorderLayout());
 
         JPanel header = new JPanel(new BorderLayout());
@@ -100,13 +107,14 @@ public class AdminDashboard extends JFrame {
 
         model = new DefaultTableModel();
         table = new JTable(model);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        table.setRowHeight(28);
+
+        // Auto resize all columns horizontally across entire width
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        table.setRowHeight(32);
         table.setFont(new Font("Arial", Font.PLAIN, 14));
         table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
 
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setPreferredSize(new Dimension(1000, 400));
 
         JPanel tablePanel = new JPanel(new BorderLayout(5, 5));
 
@@ -151,7 +159,13 @@ public class AdminDashboard extends JFrame {
         });
 
         flightManagementButton.addActionListener(e -> {
-            new FlightManagement().setVisible(true);
+            if (flightManagementFrame == null || !flightManagementFrame.isDisplayable()) {
+                flightManagementFrame = new FlightManagement();
+                flightManagementFrame.setVisible(true);
+            } else {
+                flightManagementFrame.toFront();
+                flightManagementFrame.requestFocus();
+            }
         });
 
         bookingsButton.addActionListener(e -> {
@@ -183,6 +197,22 @@ public class AdminDashboard extends JFrame {
 
         loadCounts();
         loadTable("USERS");
+    }
+
+    @Override
+    public void setVisible(boolean b) {
+        if (b) {
+            setExtendedState(JFrame.MAXIMIZED_BOTH);
+            super.setVisible(true);
+
+            SwingUtilities.invokeLater(() -> {
+                setExtendedState(JFrame.MAXIMIZED_BOTH);
+                toFront();
+                requestFocus();
+            });
+        } else {
+            super.setVisible(false);
+        }
     }
 
     private JButton createMenuButton(String text) {
@@ -270,6 +300,9 @@ public class AdminDashboard extends JFrame {
 
                 model.addRow(row);
             }
+
+            // Always enforce full-width stretch whenever data is reloaded for any button
+            table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(

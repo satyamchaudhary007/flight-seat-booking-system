@@ -1,10 +1,8 @@
-
 package gui;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
@@ -29,8 +27,10 @@ public class Login extends JFrame {
         setTitle("SkySeat - Login");
         setSize(1000, 700);
         setMinimumSize(new Dimension(850, 620));
-        setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Window ko full screen (maximized) set karne ke liye
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         BackgroundPanel background = new BackgroundPanel();
         background.setLayout(new BorderLayout());
@@ -53,12 +53,10 @@ public class Login extends JFrame {
         subtitle.setForeground(MUTED);
         subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        emailField = new PlaceholderTextField(
-                "Enter your email or Admin ID");
+        emailField = new PlaceholderTextField("Enter your email or Admin ID");
         styleField(emailField);
 
-        passwordField = new PlaceholderPasswordField(
-                "Enter your password");
+        passwordField = new PlaceholderPasswordField("Enter your password");
         styleField(passwordField);
 
         JPanel emailRow = createInputRow("email", emailField);
@@ -82,9 +80,7 @@ public class Login extends JFrame {
         eyeButton.addActionListener(e -> {
             passwordVisible = !passwordVisible;
             passwordField.setPasswordVisible(passwordVisible);
-
-            eyeButton.setToolTipText(
-                    passwordVisible ? "Hide password" : "Show password");
+            eyeButton.setToolTipText(passwordVisible ? "Hide password" : "Show password");
         });
 
         JButton loginButton = createButton("LOGIN NOW   →");
@@ -95,8 +91,7 @@ public class Login extends JFrame {
         accountText.setForeground(MUTED);
         accountText.setFont(new Font("Arial", Font.PLAIN, 14));
 
-        JPanel registerRow = new JPanel(
-                new FlowLayout(FlowLayout.CENTER, 5, 0));
+        JPanel registerRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
         registerRow.setOpaque(false);
         registerRow.add(accountText);
         registerRow.add(registerButton);
@@ -135,7 +130,6 @@ public class Login extends JFrame {
         background.add(footer, BorderLayout.SOUTH);
 
         loginButton.addActionListener(e -> loginUser());
-
         passwordField.addActionListener(e -> loginUser());
 
         registerButton.addActionListener(e -> {
@@ -149,6 +143,23 @@ public class Login extends JFrame {
         });
 
         setContentPane(background);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+    }
+
+    @Override
+    public void setVisible(boolean b) {
+        if (b) {
+            setExtendedState(JFrame.MAXIMIZED_BOTH);
+            super.setVisible(true);
+
+            SwingUtilities.invokeLater(() -> {
+                setExtendedState(JFrame.MAXIMIZED_BOTH);
+                toFront();
+                requestFocus();
+            });
+        } else {
+            super.setVisible(false);
+        }
     }
 
     private void styleField(JTextField field) {
@@ -161,7 +172,6 @@ public class Login extends JFrame {
     }
 
     private class PlaceholderTextField extends JTextField {
-
         private final String placeholder;
 
         PlaceholderTextField(String placeholder) {
@@ -187,8 +197,7 @@ public class Login extends JFrame {
                 g2.drawString(
                         placeholder,
                         insets.left,
-                        (getHeight() - fm.getHeight()) / 2
-                                + fm.getAscent());
+                        (getHeight() - fm.getHeight()) / 2 + fm.getAscent());
 
                 g2.dispose();
             }
@@ -196,9 +205,7 @@ public class Login extends JFrame {
     }
 
     private class PlaceholderPasswordField extends JPasswordField {
-
         private final String placeholder;
-        private boolean passwordVisible = false;
 
         PlaceholderPasswordField(String placeholder) {
             this.placeholder = placeholder;
@@ -207,7 +214,6 @@ public class Login extends JFrame {
         }
 
         void setPasswordVisible(boolean visible) {
-            passwordVisible = visible;
             setEchoChar(visible ? (char) 0 : '•');
             repaint();
         }
@@ -230,8 +236,7 @@ public class Login extends JFrame {
                 g2.drawString(
                         placeholder,
                         insets.left,
-                        (getHeight() - fm.getHeight()) / 2
-                                + fm.getAscent());
+                        (getHeight() - fm.getHeight()) / 2 + fm.getAscent());
 
                 g2.dispose();
             }
@@ -273,9 +278,7 @@ public class Login extends JFrame {
                 g2.setColor(getModel().isRollover()
                         ? new Color(20, 125, 225) : BLUE);
 
-                g2.fillRoundRect(
-                        0, 0, getWidth(), getHeight(), 45, 45);
-
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 45, 45);
                 g2.dispose();
                 super.paintComponent(g);
             }
@@ -308,7 +311,6 @@ public class Login extends JFrame {
     }
 
     private class IconView extends JComponent {
-
         private final String type;
         private final int iconSize;
 
@@ -345,15 +347,11 @@ public class Login extends JFrame {
             } else if ("email".equals(type)) {
                 g2.drawRoundRect(x + 2, y + 5, s - 4, s - 10, 3, 3);
                 g2.drawLine(x + 3, y + 6, x + s / 2, y + s / 2 + 2);
-                g2.drawLine(x + s / 2, y + s / 2 + 2,
-                        x + s - 3, y + 6);
+                g2.drawLine(x + s / 2, y + s / 2 + 2, x + s - 3, y + 6);
             } else if ("lock".equals(type)) {
-                g2.drawRoundRect(x + 4, y + s / 2 - 1,
-                        s - 8, s / 2 - 2, 3, 3);
-                g2.drawRoundRect(x + 7, y + 3, s - 14,
-                        s / 2 + 3, 7, 7);
-                g2.drawLine(x + s / 2, y + s / 2 + 4,
-                        x + s / 2, y + s - 5);
+                g2.drawRoundRect(x + 4, y + s / 2 - 1, s - 8, s / 2 - 2, 3, 3);
+                g2.drawRoundRect(x + 7, y + 3, s - 14, s / 2 + 3, 7, 7);
+                g2.drawLine(x + s / 2, y + s / 2 + 4, x + s / 2, y + s - 5);
             } else if ("eye".equals(type)) {
                 g2.drawOval(x + 2, y + s / 4, s - 4, s / 2);
                 g2.drawOval(x + s / 2 - 3, y + s / 2 - 3, 6, 6);
@@ -380,8 +378,7 @@ public class Login extends JFrame {
 
             g2.setColor(new Color(180, 220, 255, 160));
             g2.setStroke(new BasicStroke(1.2f));
-            g2.drawRoundRect(
-                    0, 0, getWidth() - 1, getHeight() - 1, 28, 28);
+            g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 28, 28);
 
             g2.dispose();
             super.paintComponent(g);
@@ -389,7 +386,6 @@ public class Login extends JFrame {
     }
 
     private class BackgroundPanel extends JPanel {
-
         private BufferedImage backgroundImage;
 
         BackgroundPanel() {
@@ -411,8 +407,7 @@ public class Login extends JFrame {
                 }
 
                 if (backgroundImage == null) {
-                    System.err.println(
-                            "Background not found: src/images/login.png");
+                    System.err.println("Background not found: src/images/login.png");
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -429,12 +424,10 @@ public class Login extends JFrame {
                     RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
             if (backgroundImage != null) {
-                g2.drawImage(backgroundImage, 0, 0,
-                        getWidth(), getHeight(), this);
+                g2.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
             } else {
                 g2.setPaint(new GradientPaint(
-                        0, 0, NAVY, getWidth(), getHeight(),
-                        new Color(20, 100, 170)));
+                        0, 0, NAVY, getWidth(), getHeight(), new Color(20, 100, 170)));
                 g2.fillRect(0, 0, getWidth(), getHeight());
             }
 
@@ -457,8 +450,7 @@ public class Login extends JFrame {
             return;
         }
 
-        if ((email.equalsIgnoreCase("admin")
-                || email.equalsIgnoreCase("admin@skyseat.com"))
+        if ((email.equalsIgnoreCase("admin") || email.equalsIgnoreCase("admin@skyseat.com"))
                 && password.equals("admin123")) {
 
             JOptionPane.showMessageDialog(
@@ -472,12 +464,21 @@ public class Login extends JFrame {
             return;
         }
 
+        Connection con = DBConnection.getConnection();
+        if (con == null) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Database Connection Failed!\nPlease check your MySQL DB service or DBConnection.java credentials.",
+                    "Connection Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         String sql = "SELECT USER_ID, NAME FROM USERS "
                 + "WHERE LOWER(TRIM(EMAIL)) = LOWER(TRIM(?)) "
                 + "AND PASSWORD = ?";
 
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, email);
             ps.setString(2, password);
@@ -511,11 +512,17 @@ public class Login extends JFrame {
                     "Login Error",
                     JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
+        } finally {
+            try {
+                if (con != null) con.close();
+            } catch (Exception ignored) {}
         }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() ->
-                new Login().setVisible(true));
+        SwingUtilities.invokeLater(() -> {
+            Login login = new Login();
+            login.setVisible(true);
+        });
     }
 }

@@ -1,10 +1,8 @@
-
 package gui;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
@@ -33,6 +31,9 @@ public class Register extends JFrame {
         setMinimumSize(new Dimension(850, 720));
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Window ko full screen (maximized) set karne ke liye
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         BackgroundPanel background = new BackgroundPanel();
         background.setLayout(new BorderLayout());
@@ -136,7 +137,6 @@ public class Register extends JFrame {
         background.add(footer, BorderLayout.SOUTH);
 
         registerButton.addActionListener(e -> register());
-
         confirmPasswordField.addActionListener(e -> register());
 
         loginButton.addActionListener(e -> {
@@ -150,6 +150,23 @@ public class Register extends JFrame {
         });
 
         setContentPane(background);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+    }
+
+    @Override
+    public void setVisible(boolean b) {
+        if (b) {
+            setExtendedState(JFrame.MAXIMIZED_BOTH);
+            super.setVisible(true);
+
+            SwingUtilities.invokeLater(() -> {
+                setExtendedState(JFrame.MAXIMIZED_BOTH);
+                toFront();
+                requestFocus();
+            });
+        } else {
+            super.setVisible(false);
+        }
     }
 
     private JPanel createInputRow(
@@ -262,7 +279,6 @@ public class Register extends JFrame {
     }
 
     private class PlaceholderField extends JTextField {
-
         private final String placeholder;
 
         PlaceholderField(String placeholder) {
@@ -298,7 +314,6 @@ public class Register extends JFrame {
     }
 
     private class PlaceholderPassword extends JPasswordField {
-
         private final String placeholder;
         private boolean visible = false;
 
@@ -346,7 +361,6 @@ public class Register extends JFrame {
     }
 
     private class IconView extends JComponent {
-
         private final String type;
         private final int iconSize;
 
@@ -378,34 +392,25 @@ public class Register extends JFrame {
                 g2.drawLine(x + 3, y + s - 5, x + s - 3, y + 3);
                 g2.drawLine(x + s - 3, y + 3, x + s - 7, y + s - 2);
                 g2.drawLine(x + 3, y + s - 5, x + s - 7, y + s - 2);
-                g2.drawLine(x + s / 2, y + s / 2,
-                        x + 4, y + s / 2 - 4);
-                g2.drawLine(x + s / 2, y + s / 2,
-                        x + s / 2 - 4, y + s - 2);
+                g2.drawLine(x + s / 2, y + s / 2, x + 4, y + s / 2 - 4);
+                g2.drawLine(x + s / 2, y + s / 2, x + s / 2 - 4, y + s - 2);
             } else if ("email".equals(type)) {
                 g2.drawRoundRect(x + 2, y + 5, s - 4, s - 10, 3, 3);
                 g2.drawLine(x + 3, y + 6, x + s / 2, y + s / 2 + 2);
-                g2.drawLine(x + s / 2, y + s / 2 + 2,
-                        x + s - 3, y + 6);
+                g2.drawLine(x + s / 2, y + s / 2 + 2, x + s - 3, y + 6);
             } else if ("user".equals(type)) {
                 g2.drawOval(x + s / 3, y + 2, s / 3, s / 3);
-                g2.drawArc(x + 3, y + s / 2, s - 6, s / 2,
-                        0, 180);
+                g2.drawArc(x + 3, y + s / 2, s - 6, s / 2, 0, 180);
             } else if ("phone".equals(type)) {
                 g2.drawRoundRect(x + 5, y + 2, s - 10, s - 4, 4, 4);
-                g2.drawLine(x + 9, y + s - 5,
-                        x + s - 9, y + s - 5);
+                g2.drawLine(x + 9, y + s - 5, x + s - 9, y + s - 5);
             } else if ("lock".equals(type)) {
-                g2.drawRoundRect(x + 4, y + s / 2 - 1,
-                        s - 8, s / 2 - 2, 3, 3);
-                g2.drawRoundRect(x + 7, y + 3,
-                        s - 14, s / 2 + 3, 7, 7);
-                g2.drawLine(x + s / 2, y + s / 2 + 4,
-                        x + s / 2, y + s - 5);
+                g2.drawRoundRect(x + 4, y + s / 2 - 1, s - 8, s / 2 - 2, 3, 3);
+                g2.drawRoundRect(x + 7, y + 3, s - 14, s / 2 + 3, 7, 7);
+                g2.drawLine(x + s / 2, y + s / 2 + 4, x + s / 2, y + s - 5);
             } else if ("eye".equals(type)) {
                 g2.drawOval(x + 2, y + s / 4, s - 4, s / 2);
-                g2.drawOval(x + s / 2 - 3,
-                        y + s / 2 - 3, 6, 6);
+                g2.drawOval(x + s / 2 - 3, y + s / 2 - 3, 6, 6);
             }
 
             g2.dispose();
@@ -413,7 +418,6 @@ public class Register extends JFrame {
     }
 
     private class GlassCard extends JPanel {
-
         GlassCard() {
             setOpaque(false);
         }
@@ -426,14 +430,11 @@ public class Register extends JFrame {
                     RenderingHints.VALUE_ANTIALIAS_ON);
 
             g2.setColor(new Color(7, 36, 76, 190));
-            g2.fillRoundRect(
-                    0, 0, getWidth(), getHeight(), 28, 28);
+            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 28, 28);
 
             g2.setColor(new Color(180, 220, 255, 160));
             g2.setStroke(new BasicStroke(1.2f));
-            g2.drawRoundRect(
-                    0, 0, getWidth() - 1,
-                    getHeight() - 1, 28, 28);
+            g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 28, 28);
 
             g2.dispose();
             super.paintComponent(g);
@@ -441,7 +442,6 @@ public class Register extends JFrame {
     }
 
     private class BackgroundPanel extends JPanel {
-
         private BufferedImage backgroundImage;
 
         BackgroundPanel() {
@@ -450,24 +450,20 @@ public class Register extends JFrame {
 
         private void loadBackground() {
             try {
-                URL resource =
-                        Register.class.getResource("/images/register.png");
+                URL resource = Register.class.getResource("/images/register.png");
 
                 if (resource != null) {
-                    backgroundImage =
-                            javax.imageio.ImageIO.read(resource);
+                    backgroundImage = javax.imageio.ImageIO.read(resource);
                 } else {
                     File file = new File("src/images/register.png");
 
                     if (file.exists()) {
-                        backgroundImage =
-                                javax.imageio.ImageIO.read(file);
+                        backgroundImage = javax.imageio.ImageIO.read(file);
                     }
                 }
 
                 if (backgroundImage == null) {
-                    System.err.println(
-                            "Background not found: src/images/register.png");
+                    System.err.println("Background not found: src/images/register.png");
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -484,12 +480,10 @@ public class Register extends JFrame {
                     RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
             if (backgroundImage != null) {
-                g2.drawImage(backgroundImage, 0, 0,
-                        getWidth(), getHeight(), this);
+                g2.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
             } else {
                 g2.setPaint(new GradientPaint(
-                        0, 0, NAVY, getWidth(), getHeight(),
-                        new Color(20, 100, 170)));
+                        0, 0, NAVY, getWidth(), getHeight(), new Color(20, 100, 170)));
                 g2.fillRect(0, 0, getWidth(), getHeight());
             }
 
@@ -504,8 +498,7 @@ public class Register extends JFrame {
         String email = emailField.getText().trim();
         String phone = phoneField.getText().trim();
         String password = new String(passwordField.getPassword());
-        String confirmPassword =
-                new String(confirmPasswordField.getPassword());
+        String confirmPassword = new String(confirmPasswordField.getPassword());
 
         if (name.isEmpty() || email.isEmpty() || phone.isEmpty()
                 || password.isEmpty() || confirmPassword.isEmpty()) {
@@ -527,12 +520,20 @@ public class Register extends JFrame {
             return;
         }
 
+        Connection con = DBConnection.getConnection();
+        if (con == null) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Database Connection Failed!\nPlease check your MySQL DB service or DBConnection.java credentials.",
+                    "Connection Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         String sql = "INSERT INTO USERS "
-                + "(USER_ID, NAME, EMAIL, PHONE, PASSWORD, CREATED_AT) "
-                + "VALUES (USERS_SEQ.NEXTVAL, ?, ?, ?, ?, SYSTIMESTAMP)";
+                + "(NAME, EMAIL, PHONE, PASSWORD, CREATED_AT) "
+                + "VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)";
 
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement pst = con.prepareStatement(sql)) {
+        try (PreparedStatement pst = con.prepareStatement(sql)) {
 
             pst.setString(1, name);
             pst.setString(2, email);
@@ -553,7 +554,7 @@ public class Register extends JFrame {
             }
 
         } catch (SQLException e) {
-            if (e.getErrorCode() == 1) {
+            if (e.getErrorCode() == 1062) {
                 JOptionPane.showMessageDialog(
                         this,
                         "Email already registered.",
@@ -567,11 +568,17 @@ public class Register extends JFrame {
                         JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
             }
+        } finally {
+            try {
+                if (con != null) con.close();
+            } catch (Exception ignored) {}
         }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(
-                () -> new Register().setVisible(true));
+        SwingUtilities.invokeLater(() -> {
+            Register register = new Register();
+            register.setVisible(true);
+        });
     }
 }
