@@ -3,6 +3,7 @@
     <output-path>$PROJECT_DIR$/out/artifacts/Flight_Seat_Booking_jar</output-path>
     <root id="archive" name="Flight_Seat_Booking.jar">
       <element id="module-output" name="Flight_Seat_Booking" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/mysql-connector-j-26.10.0/mysql-connector-j-26.10.0/mysql-connector-j-26.10.0.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$USER_HOME$/Downloads/ojdbc11.jar" path-in-jar="/" />
     </root>
   </artifact>

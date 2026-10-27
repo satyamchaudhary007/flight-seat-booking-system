@@ -1,9 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="Flight_Seat_Booking:jar2">
-    <output-path>$PROJECT_DIR$/out/artifacts/Flight_Seat_Booking_jar2</output-path>
-    <root id="archive" name="Flight_Seat_Booking.jar">
-      <element id="module-output" name="Flight_Seat_Booking" />
-      <element id="extracted-dir" path="$USER_HOME$/Downloads/ojdbc11.jar" path-in-jar="/" />
-    </root>
-  </artifact>
-</component>
